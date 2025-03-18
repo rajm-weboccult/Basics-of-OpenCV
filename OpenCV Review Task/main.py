@@ -6,9 +6,6 @@ RTSP_URLS = [
     "rtsp://admin:abc@1234@192.168.0.248:554/cam/realmonitor?channel=2&subtype=0",
     "rtsp://admin:abc@1234@192.168.0.248:554/cam/realmonitor?channel=3&subtype=0"
 ]
-# Parameters for bilateral filter
-bilateral= {"d": 15, "sigmaColor": 95, "sigmaSpace": 95}
-
 # Initialize video captures and previous frames
 caps = [cv2.VideoCapture(url) for url in RTSP_URLS]
 previous_frames = [None] * len(RTSP_URLS)
@@ -21,8 +18,9 @@ while True:
         ret, frame = cap.read()
         if not ret:
             continue 
-        #Bilateral filter
-        bilateral_frame = cv2.bilateralFilter(frame, **bilateral)
+        
+        # Parameters for bilateral filter
+        bilateral_frame= cv2.bilateralFilter(frame,15,95,95)
 
         #Cropped 10% from the bottom
         h,w = bilateral_frame.shape[:2]
