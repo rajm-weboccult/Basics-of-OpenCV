@@ -3,30 +3,29 @@ import numpy as np
 import os
 
 output_dir = "captured_images"
-os.makedirs(output_dir, exist_ok=True)
 
 # Check if 5 frames are already captured
-existing_frames = [f for f in os.listdir(output_dir) if f.startswith("frame_") and f.endswith(".jpg")]
-if len(existing_frames) >= 5:
-    print("Found 5 frames. Skipping frame capture.")
-    frames = [cv2.imread(os.path.join(output_dir, f)) for f in sorted(existing_frames)]
+Curr_frames = [f for f in os.listdir(output_dir) if f.startswith("frame_") and f.endswith(".jpg")]
+if len(Curr_frames) >= 5:
+    print("Found 5 frames")
+    frames = [cv2.imread(os.path.join(output_dir, f)) for f in sorted(Curr_frames)]
 else:
     cap = cv2.VideoCapture(0) 
     if not cap.isOpened():
         print("Failed to open camera.")
     else:
         frames = []
-        print("Capturing 5 frames...")
+        print("Capturing 5 frames")
         for i in range(5):
             ret, frame = cap.read()
             if not ret:
-                print("Failed to capture frame.")
+                print("Failed to capture")
                 break
             frames.append(frame)
             cv2.imwrite(os.path.join(output_dir, f"frame_{i+1}.jpg"), frame)
             cv2.imshow("Frame Capture", frame)
             if cv2.waitKey(5000) & 0xFF == ord('q'):  
-                print("Exit on user input.")
+                print("Exit")
                 break
         cap.release()
         cv2.destroyAllWindows()
@@ -71,7 +70,6 @@ for frame in frames:
 
 # Combine all horizontal combined images vertically
 final_image = cv2.vconcat(manipulated_frames)
-
 small_final_image = cv2.resize(final_image, (int(final_image.shape[1] * 0.2), int(final_image.shape[0] * 0.2)))
 
 # Save and display the final image
